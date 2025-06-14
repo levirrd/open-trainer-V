@@ -1,6 +1,6 @@
-﻿using GTA.UI;
-using LemonUI;
+﻿using LemonUI;
 using LemonUI.Menus;
+using Open_Trainer_V.Features; 
 namespace Open_Trainer_V
 {
     public class MenuScript
@@ -46,8 +46,10 @@ namespace Open_Trainer_V
             //add items to menus or submenus
             PlayerOptions.Add(ClearWanted);
             VehicleOptions.Add(FixVehicle);
+            //funcs
+            ClearWanted.Activated += (sender, args) =>PlayerFunctions.ClearWantedLevel();
         }
-
+        
         public void Tick()
         {
             menuPool.Process();
