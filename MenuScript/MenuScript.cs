@@ -1,4 +1,6 @@
-﻿using LemonUI;
+﻿using System;
+using System.Runtime.Remoting.Channels;
+using LemonUI;
 using LemonUI.Menus;
 using Open_Trainer_V.Features; 
 namespace Open_Trainer_V
@@ -15,10 +17,11 @@ namespace Open_Trainer_V
         
         public static MenuScript instance;
         //items 
+        //player
         private readonly NativeItem ClearWanted;
+        private readonly NativeCheckboxItem GodMode;
+        private readonly NativeItem HealPlayer;
         private readonly NativeItem FixVehicle;
-
-
         public MenuScript()
         {
             instance = this;
@@ -43,11 +46,23 @@ namespace Open_Trainer_V
             
             FixVehicle = new NativeItem("Fix Vehicle", "Repairs and cleans the vehicle");
             ClearWanted = new NativeItem("Clear Wanted", "Clears Wanted Level");
+            GodMode = new NativeCheckboxItem("God Mode", "Sets God Mode",false);
+            HealPlayer = new NativeItem("Heal Player", "Heals the player (armor+health)");
             //add items to menus or submenus
             PlayerOptions.Add(ClearWanted);
+            PlayerOptions.Add(GodMode);
+            PlayerOptions.Add(HealPlayer);
             VehicleOptions.Add(FixVehicle);
             //funcs
+            GodMode.CheckboxChanged += (sender, e) => 
+            {
+               if(GodMode.Checked) PlayerFunctions.ToggleGodMode(true);
+               else PlayerFunctions.ToggleGodMode(false);
+            };
+
+            HealPlayer.Activated += (sender, e) => PlayerFunctions.HealPlayer();
             ClearWanted.Activated += (sender, args) =>PlayerFunctions.ClearWantedLevel();
+            
         }
         
         public void Tick()
