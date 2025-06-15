@@ -1,6 +1,5 @@
 ﻿using GTA;
 using GTA.Native;
-
 namespace Open_Trainer_V.Features
 {
     public static class PlayerFunctions
