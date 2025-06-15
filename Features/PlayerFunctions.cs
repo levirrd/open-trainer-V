@@ -38,8 +38,6 @@ namespace Open_Trainer_V.Features
         public static bool isInfiniteStaminaOn;
         public static void InfiniteStamina(bool isEnabled)
         {
-            Function.Call(Hash.RESET_PLAYER_STAMINA, Game.Player);
- 
             isInfiniteStaminaOn = isEnabled;
             string statusText = isEnabled ? "~g~Enabled" : "~r~Disabled";
             GTA.UI.Notification.Show($"~b~Infinite stamina: {statusText}");
@@ -48,7 +46,7 @@ namespace Open_Trainer_V.Features
         {
             playerChar.ClearBloodDamage();
             playerChar.ClearVisibleDamage();
-            GTA.UI.Notification.Show("~b~Cleaned Ped.");
+            GTA.UI.Notification.Show("~b~Player has been cleaned.");
         }
 
         public static void SetPlayerVisible(bool IsVisible)
@@ -87,11 +85,30 @@ namespace Open_Trainer_V.Features
         public static void SetPlayerWantedLevel(int wantedLevel)
         {
             Game.Player.WantedLevel = wantedLevel;
+            GTA.UI.Notification.Show($"~b~Wanted Level Set : {wantedLevel}");
         }
 
-        public static void NeverWanted()
+        public static void NeverWanted(bool isEnabled)
         {
+            Game.Player.WantedLevel = 0;
             Game.MaxWantedLevel = 0;
+            string statusText = isEnabled ? "~g~Enabled" : "~r~Disabled";
+            GTA.UI.Notification.Show($"~b~Never Wanted: {statusText}");
+        }
+        public static bool isSuperJumpOn;
+
+        public static void SuperJump(bool isEnabled)
+        {
+            isSuperJumpOn = isEnabled;
+            string statusText = isEnabled ? "~g~Enabled" : "~r~Disabled";
+            GTA.UI.Notification.Show($"~b~Super Jump: {statusText}");
+        }
+        public static bool isFastRunOn;
+        public static void FastRun(bool isEnabled)
+        {
+            isFastRunOn = isEnabled;
+            string statusText = isEnabled ? "~g~Enabled" : "~r~Disabled";
+            GTA.UI.Notification.Show($"~b~Fast Running: {statusText}");
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using System;
-using System.Runtime.Remoting.Channels;
+﻿using GTA;
+using GTA.Native;
 using GTA.UI;
 using LemonUI;
 using LemonUI.Menus;
@@ -28,6 +28,8 @@ namespace Open_Trainer_V
         private readonly NativeItem SetMoney;
         private readonly NativeSliderItem SetWantedLevel;
         private readonly NativeCheckboxItem NeverWanted;
+        private readonly NativeCheckboxItem SuperJump;
+        private readonly NativeCheckboxItem FastRunning;
         
         private readonly NativeItem FixVehicle;
         public MenuScript()
@@ -63,6 +65,8 @@ namespace Open_Trainer_V
             SetMoney = new NativeItem("Money Input", "Money Input");
             SetWantedLevel = new NativeSliderItem("Set Wanted Level", "Sets Wanted Level", 5,0);
             NeverWanted = new  NativeCheckboxItem("Never Wanted", "Never Wanted",false);
+            SuperJump = new  NativeCheckboxItem("Super Jump", "Makes the Player Jump HIGH",false);
+            FastRunning = new  NativeCheckboxItem("Fast Running", "Makes the Player run fast",false);
             
             //add items to menus or submenus
             PlayerOptions.Add(ClearWanted);
@@ -74,6 +78,8 @@ namespace Open_Trainer_V
             PlayerOptions.Add(SetWantedLevel);
             PlayerOptions.Add(SetMoney);
             PlayerOptions.Add(NeverWanted);
+            PlayerOptions.Add(SuperJump);
+            PlayerOptions.Add(FastRunning);
             
             VehicleOptions.Add(FixVehicle);
             
@@ -103,7 +109,15 @@ namespace Open_Trainer_V
             };
             NeverWanted.CheckboxChanged += (sender, args) =>
             {
-                PlayerFunctions.NeverWanted();
+                PlayerFunctions.NeverWanted(NeverWanted.Checked);
+            };
+            SuperJump.CheckboxChanged += (sender, args) =>
+            {
+                PlayerFunctions.SuperJump(SuperJump.Checked);
+            };
+            FastRunning.CheckboxChanged += (sender, args) =>
+            {
+                PlayerFunctions.FastRun(FastRunning.Checked);
             };
         }
         
@@ -112,8 +126,17 @@ namespace Open_Trainer_V
             menuPool.Process();
             if (PlayerFunctions.isInfiniteStaminaOn && InfiniteStamina.Checked)
             {
-                PlayerFunctions.InfiniteStamina(InfiniteStamina.Checked);
+                Function.Call(Hash.RESET_PLAYER_STAMINA, Game.Player);
             } 
+            if (PlayerFunctions.isSuperJumpOn && SuperJump.Checked)
+            {
+                Function.Call(Hash.SET_SUPER_JUMP_THIS_FRAME, Game.Player.Handle);
+            }
+
+            if (PlayerFunctions.isFastRunOn && FastRunning.Checked)
+            {
+                Function.Call(Hash.SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER, Game.Player, 1.7f);
+            }
         }
 
         public void OpenMenu()
