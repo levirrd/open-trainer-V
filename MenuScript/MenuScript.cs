@@ -15,7 +15,8 @@ namespace Open_Trainer_V
          private readonly NativeMenu VehicleOptions;
          private readonly NativeMenu WeaponOptions;
          private readonly NativeMenu WorldOptions;
-        public static MenuScript instance;
+         private readonly NativeMenu WantedOptions;
+         public static MenuScript instance;
 
         private readonly NativeItem ClearWanted;
         private readonly NativeCheckboxItem GodMode;
@@ -36,24 +37,33 @@ namespace Open_Trainer_V
         {
             #region Menu Initialization
             TrainerMenu = new NativeMenu("Open Trainer V", "MAIN MENU", "OpenSource Trainer for V");
-            PlayerOptions = new NativeMenu("Player Options", "Player Options", "Options related to the player");
-            WeaponOptions = new NativeMenu("Weapon Options", "Weapon Options", "Options related to weapons");
-            VehicleOptions = new NativeMenu("Vehicle Options", "Vehicle Options", "Options related to the vehicle");
-            WorldOptions = new NativeMenu("World Options", "World Options", "Options related to the world");
+            PlayerOptions = new NativeMenu("Player Options", "Player Options", "Options related to the Player");
+            WeaponOptions = new NativeMenu("Weapon Options", "Weapon Options", "Options related to Weapons");
+            VehicleOptions = new NativeMenu("Vehicle Options", "Vehicle Options", "Options related to Vehicles");
+            WorldOptions = new NativeMenu("World Options", "World Options", "Options related to the World");
+            WantedOptions = new NativeMenu("Wanted Options", "Wanted Options", "Options related to the Wanted System");
             menuPool = new ObjectPool();
             instance = this;
-            
             menuPool.Add(TrainerMenu);
             menuPool.Add(PlayerOptions);
             menuPool.Add(VehicleOptions);
             menuPool.Add(WeaponOptions);
             menuPool.Add(WorldOptions);
+            menuPool.Add(WantedOptions);
             
             TrainerMenu.AddSubMenu(PlayerOptions);
             TrainerMenu.AddSubMenu(VehicleOptions);
             TrainerMenu.AddSubMenu(WeaponOptions);
             TrainerMenu.AddSubMenu(WorldOptions);
+            PlayerOptions.AddSubMenu(WantedOptions);
+            //fonts
             TrainerMenu.BannerText.Font = Font.ChaletComprimeCologne;
+            PlayerOptions.BannerText.Font = Font.ChaletComprimeCologne;
+            WeaponOptions.BannerText.Font = Font.ChaletComprimeCologne;
+            VehicleOptions.BannerText.Font = Font.ChaletComprimeCologne;
+            WorldOptions.BannerText.Font = Font.ChaletComprimeCologne;
+            WantedOptions.BannerText.Font = Font.ChaletComprimeCologne;
+            
             TrainerMenu.MouseBehavior = MenuMouseBehavior.Movement;
             #endregion
             
@@ -80,20 +90,20 @@ namespace Open_Trainer_V
 
             #region Add Items to Menus
             //player
+            WantedOptions.Add(SetWantedLevel);
+            WantedOptions.Add(ClearWanted);
+            WantedOptions.Add(NeverWanted);
             PlayerOptions.Add(GodMode);
-            PlayerOptions.Add(HealPlayer);
             PlayerOptions.Add(InfiniteStamina);
-            PlayerOptions.Add(CleanPlayer);
             PlayerOptions.Add(PlayerVisibility);
-            PlayerOptions.Add(SetMoney);
-            PlayerOptions.Add(SetWantedLevel);
-            PlayerOptions.Add(ClearWanted);
-            PlayerOptions.Add(NeverWanted);
             PlayerOptions.Add(SuperJump);
             PlayerOptions.Add(FastRunning);
+            PlayerOptions.Add(HealPlayer);
+            PlayerOptions.Add(CleanPlayer);
+            PlayerOptions.Add(SetMoney);
             //vehicle
-            VehicleOptions.Add(SpawnVehicle);
             VehicleOptions.Add(VehicleGodMode);
+            VehicleOptions.Add(SpawnVehicle);
             VehicleOptions.Add(FixVehicle);
             VehicleOptions.Add(CleanVehicle);
             #endregion
