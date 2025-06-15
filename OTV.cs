@@ -19,10 +19,7 @@ namespace Open_Trainer_V
         }
         private void OnKeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.F4)
-            {
-                MenuScript.instance.OpenMenu();
-            }
+            if (e.KeyCode == Keys.F4) MenuScript.instance.OpenMenu();
         }
 
 
