@@ -50,7 +50,7 @@ namespace Open_Trainer_V
             menuPool.Add(WeaponOptions);
             menuPool.Add(WorldOptions);
             menuPool.Add(WantedOptions);
-            
+            //submenus
             TrainerMenu.AddSubMenu(PlayerOptions);
             TrainerMenu.AddSubMenu(VehicleOptions);
             TrainerMenu.AddSubMenu(WeaponOptions);
@@ -80,14 +80,13 @@ namespace Open_Trainer_V
             NeverWanted = new  NativeCheckboxItem("Never Wanted", "Disables Wanted Level",false);
             SuperJump = new  NativeCheckboxItem("Super Jump", "Makes the Player Jump HIGH",false);
             FastRunning = new  NativeCheckboxItem("Fast Running", "Makes the Player run faster",false);
-            
             //vehicle options
             SpawnVehicle = new NativeItem("Spawn Vehicle", "Enter a vehicle model to spawn");
             VehicleGodMode = new NativeCheckboxItem("God Mode", "Sets vehicle God Mode",false);
             FixVehicle = new NativeItem("Fix Vehicle", "Repairs and cleans the vehicle");
             CleanVehicle =  new  NativeItem("Clean Vehicle", "Cleans the vehicle");
             #endregion
-
+            
             #region Add Items to Menus
             //player
             WantedOptions.Add(SetWantedLevel);
