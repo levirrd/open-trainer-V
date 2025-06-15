@@ -3,11 +3,11 @@ using GTA;
 using System.Windows.Forms;
 namespace Open_Trainer_V
 {
-    public class OTV : Script
+    public class ModCore : Script
     {
         public MenuScript menuScript;
 
-        public OTV()
+        public ModCore()
         {
             menuScript = new MenuScript();
             this.KeyUp += OnKeyUp;

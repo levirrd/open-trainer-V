@@ -28,7 +28,9 @@ namespace Open_Trainer_V
         private readonly NativeCheckboxItem NeverWanted;
         private readonly NativeCheckboxItem SuperJump;
         private readonly NativeCheckboxItem FastRunning;
-        
+        private readonly NativeItem CleanVehicle;
+        private readonly NativeCheckboxItem VehicleGodMode;
+        private readonly NativeItem SpawnVehicle;
         private readonly NativeItem FixVehicle;
         public MenuScript()
         {
@@ -43,53 +45,64 @@ namespace Open_Trainer_V
             
             menuPool.Add(TrainerMenu);
             menuPool.Add(PlayerOptions);
-            menuPool.Add(WeaponOptions);
             menuPool.Add(VehicleOptions);
+            menuPool.Add(WeaponOptions);
             menuPool.Add(WorldOptions);
             
             TrainerMenu.AddSubMenu(PlayerOptions);
-            TrainerMenu.AddSubMenu(WeaponOptions);
             TrainerMenu.AddSubMenu(VehicleOptions);
+            TrainerMenu.AddSubMenu(WeaponOptions);
             TrainerMenu.AddSubMenu(WorldOptions);
             TrainerMenu.BannerText.Font = Font.ChaletComprimeCologne;
             TrainerMenu.MouseBehavior = MenuMouseBehavior.Movement;
             #endregion
             
             #region Menu Items
-            FixVehicle = new NativeItem("Fix Vehicle", "Repairs and cleans the vehicle");
-            ClearWanted = new NativeItem("Clear Wanted", "Clears Wanted Level");
-            GodMode = new NativeCheckboxItem("God Mode", "Sets God Mode",false);
+            //player options
+            GodMode = new NativeCheckboxItem("God Mode", "Sets God Mode to Player",false);
             HealPlayer = new NativeItem("Heal Player", "Heals the player (armor+health)");
-            InfiniteStamina = new NativeCheckboxItem("Infinite Stamina", "Infinite Stamina Level", false);
+            InfiniteStamina = new NativeCheckboxItem("Infinite Stamina", "Sets Infinite Stamina to Player", false);
             CleanPlayer = new NativeItem("Clean Player", "Cleans the player");
-            PlayerVisibility = new NativeCheckboxItem("Player Visibility", "Sets player visibility",false);
+            PlayerVisibility = new NativeCheckboxItem("Player Visibility", "Sets player visibility to Player",false);
             SetMoney = new NativeItem("Money Input", "Money Input");
-            SetWantedLevel = new NativeSliderItem("Set Wanted Level", "Sets Wanted Level", 5,0);
-            NeverWanted = new  NativeCheckboxItem("Never Wanted", "Never Wanted",false);
+            SetWantedLevel = new NativeSliderItem("Set Wanted Level", "Sets Player Wanted Level", 5,0);
+            ClearWanted = new NativeItem("Clear Wanted", "Clears Wanted Level for the Player");
+            NeverWanted = new  NativeCheckboxItem("Never Wanted", "Disables Wanted Level",false);
             SuperJump = new  NativeCheckboxItem("Super Jump", "Makes the Player Jump HIGH",false);
-            FastRunning = new  NativeCheckboxItem("Fast Running", "Makes the Player run fast",false);
+            FastRunning = new  NativeCheckboxItem("Fast Running", "Makes the Player run faster",false);
+            
+            //vehicle options
+            SpawnVehicle = new NativeItem("Spawn Vehicle", "Enter a vehicle model to spawn");
+            VehicleGodMode = new NativeCheckboxItem("God Mode", "Sets vehicle God Mode",false);
+            FixVehicle = new NativeItem("Fix Vehicle", "Repairs and cleans the vehicle");
+            CleanVehicle =  new  NativeItem("Clean Vehicle", "Cleans the vehicle");
             #endregion
 
             #region Add Items to Menus
-            PlayerOptions.Add(ClearWanted);
+            //player
             PlayerOptions.Add(GodMode);
-            PlayerOptions.Add(InfiniteStamina);
             PlayerOptions.Add(HealPlayer);
+            PlayerOptions.Add(InfiniteStamina);
             PlayerOptions.Add(CleanPlayer);
             PlayerOptions.Add(PlayerVisibility);
-            PlayerOptions.Add(SetWantedLevel);
             PlayerOptions.Add(SetMoney);
+            PlayerOptions.Add(SetWantedLevel);
+            PlayerOptions.Add(ClearWanted);
             PlayerOptions.Add(NeverWanted);
             PlayerOptions.Add(SuperJump);
             PlayerOptions.Add(FastRunning);
-            
+            //vehicle
+            VehicleOptions.Add(SpawnVehicle);
+            VehicleOptions.Add(VehicleGodMode);
             VehicleOptions.Add(FixVehicle);
+            VehicleOptions.Add(CleanVehicle);
             #endregion
 
             #region Event Handlers
-            GodMode.CheckboxChanged += (sender, e) => PlayerFunctions.ToggleGodMode(GodMode.Checked);
-            InfiniteStamina.CheckboxChanged += (sender, e) => PlayerFunctions.InfiniteStamina(InfiniteStamina.Checked);
-            HealPlayer.Activated += (sender, e) => PlayerFunctions.HealPlayer();
+            //player options
+            GodMode.CheckboxChanged += (sender, args) => PlayerFunctions.ToggleGodMode(GodMode.Checked);
+            InfiniteStamina.CheckboxChanged += (sender, args) => PlayerFunctions.InfiniteStamina(InfiniteStamina.Checked);
+            HealPlayer.Activated += (sender, args) => PlayerFunctions.HealPlayer();
             ClearWanted.Activated += (sender, args) =>PlayerFunctions.ClearWantedLevel();
             CleanPlayer.Activated += (sender, args) => PlayerFunctions.CleanPed();
             PlayerVisibility.CheckboxChanged += (sender, args) => PlayerFunctions.SetPlayerVisibility(PlayerVisibility.Checked);
@@ -98,6 +111,11 @@ namespace Open_Trainer_V
             NeverWanted.CheckboxChanged += (sender, args) => PlayerFunctions.NeverWanted(NeverWanted.Checked);
             SuperJump.CheckboxChanged += (sender, args) => PlayerFunctions.SuperJump(SuperJump.Checked);
             FastRunning.CheckboxChanged += (sender, args) => PlayerFunctions.FastRun(FastRunning.Checked);
+            //vehicle options
+            SpawnVehicle.Activated += (sender, args) => VehicleFunctions.SpawnVehicle();
+            VehicleGodMode.CheckboxChanged += (sender, args) => VehicleFunctions.VehicleGodMode(VehicleGodMode.Checked);
+            FixVehicle.Activated += (sender, args) => VehicleFunctions.FixVehicle();
+            CleanVehicle.Activated += (sender, args) => VehicleFunctions.CleanVehicle();
             #endregion
         }
         public void Tick()

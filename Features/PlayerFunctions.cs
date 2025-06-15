@@ -90,8 +90,8 @@ namespace Open_Trainer_V.Features
         }
         public static void NeverWanted(bool isEnabled)
         {
-            Game.Player.WantedLevel = 0;
-            Game.MaxWantedLevel = 0;
+            if (isEnabled) { Game.Player.WantedLevel = 0; Game.MaxWantedLevel = 0; }
+            else Game.MaxWantedLevel = 5;
             ShowStatus("Never Wanted: ", isEnabled);
         }
         public static void SuperJump(bool isEnabled)
