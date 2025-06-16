@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Globalization;
 using GTA;
-using LemonUI.Menus;
 
 namespace Open_Trainer_V.Features
 {
     public class WeaponFunctions
     {
         private static  Ped PlayerChar = Game.Player.Character;
+        public static bool isInfiniteAmmoEnabled;
         public static void GiveAllWeapons()
         {
             foreach (WeaponHash weapon in Enum.GetValues(typeof(WeaponHash)))
@@ -18,10 +17,7 @@ namespace Open_Trainer_V.Features
             GTA.UI.Notification.Show("~b~All weapons given.");
         }
 
-        public static void RemoveAllWeapons()
-        {
-            PlayerChar.Weapons.RemoveAll();
-        }
+        public static void RemoveAllWeapons() => PlayerChar.Weapons.RemoveAll();
 
         public static void SelectWeapon(WeaponHash weapon)
         {
@@ -39,18 +35,18 @@ namespace Open_Trainer_V.Features
         public static void InfiniteAmmo(bool isEnabled)
         {
             Weapon currWeapon = PlayerChar.Weapons.Current;
-            if (currWeapon != null)
+            if (currWeapon != null && currWeapon!= WeaponHash.Unarmed)
             {
                 currWeapon.InfiniteAmmo = isEnabled;
+                isInfiniteAmmoEnabled = isEnabled;
             }
-            PlayerFunctions.ShowStatus("Player Visibility: ", isEnabled);
         }
 
         public static void SetAmmoInput()
         {
             Weapon currWeapon = PlayerChar.Weapons.Current;
             string result = Game.GetUserInput();
-            if (currWeapon != null )
+            if (currWeapon != null && currWeapon!= WeaponHash.Unarmed)
             {
                 if (int.TryParse(result, out int value))
                 {

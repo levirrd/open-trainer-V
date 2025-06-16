@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using GTA;
 using GTA.Native;
@@ -41,8 +40,10 @@ namespace Open_Trainer_V
         private readonly NativeListItem<WeaponHash> SelectWeapon;
         private readonly NativeCheckboxItem InfiniteAmmo;
         private readonly NativeItem SetAmmo;
+        private bool lastInfiniteAmmoState = false;
         public MenuScript()
         {
+            
             #region Menu Initialization
             TrainerMenu = new NativeMenu("Open Trainer V", "MAIN MENU", "OpenSource Trainer for V");
             PlayerOptions = new NativeMenu("Player Options", "Player Options", "Options related to the Player");
@@ -151,16 +152,12 @@ namespace Open_Trainer_V
             SelectWeapon.Activated += (sender, args) =>
             {
                 int index = SelectWeapon.SelectedIndex;
-
                 if (index >= 0 && index < weaponArray.Length)
                 {
                     WeaponHash selectedWeapon = weaponArray[index];
                     WeaponFunctions.SelectWeapon(selectedWeapon);
                 }
-                else
-                {
-                    GTA.UI.Notification.Show("~r~Invalid weapon selection.");
-                }
+                else  GTA.UI.Notification.Show("~r~Invalid weapon selection.");
             };
             InfiniteAmmo.CheckboxChanged += (sender, args) => WeaponFunctions.InfiniteAmmo(InfiniteAmmo.Checked);
             SetAmmo.Activated += (sender, args) => WeaponFunctions.SetAmmoInput();
@@ -169,6 +166,13 @@ namespace Open_Trainer_V
         public void Tick()
         {
             menuPool.Process();
+            if (WeaponFunctions.isInfiniteAmmoEnabled && InfiniteAmmo.Checked) WeaponFunctions.InfiniteAmmo(InfiniteAmmo.Checked);
+            if (InfiniteAmmo.Checked != lastInfiniteAmmoState)
+            {
+                WeaponFunctions.InfiniteAmmo(InfiniteAmmo.Checked);
+                PlayerFunctions.ShowStatus("Infinite Ammo: ", InfiniteAmmo.Checked);
+                lastInfiniteAmmoState = InfiniteAmmo.Checked;
+            }
             if (PlayerFunctions.isInfiniteStaminaOn && InfiniteStamina.Checked) Function.Call(Hash.RESET_PLAYER_STAMINA, Game.Player);
             
             if (PlayerFunctions.isSuperJumpOn && SuperJump.Checked) Function.Call(Hash.SET_SUPER_JUMP_THIS_FRAME, Game.Player.Handle);

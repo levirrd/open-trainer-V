@@ -12,7 +12,7 @@ namespace Open_Trainer_V.Features
         public static void ShowStatus(string feature, bool isEnabled)
         {
             string statusText = isEnabled ? "~g~Enabled" : "~r~Disabled";
-            GTA.UI.Notification.Show($"~b~{feature}: {statusText}");
+            GTA.UI.Notification.Show($"~b~{feature} {statusText}");
         }
         public static void ClearWantedLevel()
         {
