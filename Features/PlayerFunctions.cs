@@ -9,7 +9,7 @@ namespace Open_Trainer_V.Features
         public static bool isSuperJumpOn;
         public static bool isFastRunOn;
         
-        private static void ShowStatus(string feature, bool isEnabled)
+        public static void ShowStatus(string feature, bool isEnabled)
         {
             string statusText = isEnabled ? "~g~Enabled" : "~r~Disabled";
             GTA.UI.Notification.Show($"~b~{feature}: {statusText}");

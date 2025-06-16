@@ -1,4 +1,7 @@
-﻿using GTA;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using GTA;
 using GTA.Native;
 using GTA.UI;
 using LemonUI;
@@ -33,6 +36,11 @@ namespace Open_Trainer_V
         private readonly NativeCheckboxItem VehicleGodMode;
         private readonly NativeItem SpawnVehicle;
         private readonly NativeItem FixVehicle;
+        private readonly NativeItem GiveAllWeapons;
+        private readonly NativeItem RemoveAllWeapons;
+        private readonly NativeListItem<WeaponHash> SelectWeapon;
+        private readonly NativeCheckboxItem InfiniteAmmo;
+        private readonly NativeItem SetAmmo;
         public MenuScript()
         {
             #region Menu Initialization
@@ -85,6 +93,13 @@ namespace Open_Trainer_V
             VehicleGodMode = new NativeCheckboxItem("God Mode", "Sets vehicle God Mode",false);
             FixVehicle = new NativeItem("Fix Vehicle", "Repairs and cleans the vehicle");
             CleanVehicle =  new  NativeItem("Clean Vehicle", "Cleans the vehicle");
+            //weapon options
+            GiveAllWeapons = new NativeItem("Give All Weapons", "Gives all valid Weapons to Player");
+            RemoveAllWeapons = new NativeItem("Remove All Weapons", "Removes all valid Weapons from the Player");
+            WeaponHash[] weaponArray = Enum.GetValues(typeof(WeaponHash)).Cast<WeaponHash>().ToArray();
+            SelectWeapon = new NativeListItem<WeaponHash>("Select Weapon", "Selects a specific weapon for the Player", weaponArray);
+            InfiniteAmmo = new NativeCheckboxItem("Infinite Ammo", "Sets Infinite Ammo to Player's Weapon",false);
+            SetAmmo = new NativeItem("Give Ammo", "Gives Player the input amount of Ammo.");
             #endregion
             
             #region Add Items to Menus
@@ -105,8 +120,13 @@ namespace Open_Trainer_V
             VehicleOptions.Add(SpawnVehicle);
             VehicleOptions.Add(FixVehicle);
             VehicleOptions.Add(CleanVehicle);
+            //wweapon
+            WeaponOptions.Add(GiveAllWeapons);
+            WeaponOptions.Add(RemoveAllWeapons);
+            WeaponOptions.Add(SelectWeapon);
+            WeaponOptions.Add(InfiniteAmmo);
+            WeaponOptions.Add(SetAmmo);
             #endregion
-
             #region Event Handlers
             //player options
             GodMode.CheckboxChanged += (sender, args) => PlayerFunctions.ToggleGodMode(GodMode.Checked);
@@ -125,6 +145,25 @@ namespace Open_Trainer_V
             VehicleGodMode.CheckboxChanged += (sender, args) => VehicleFunctions.VehicleGodMode(VehicleGodMode.Checked);
             FixVehicle.Activated += (sender, args) => VehicleFunctions.FixVehicle();
             CleanVehicle.Activated += (sender, args) => VehicleFunctions.CleanVehicle();
+            //weapon options
+            GiveAllWeapons.Activated += (sender, args) =>  WeaponFunctions.GiveAllWeapons();
+            RemoveAllWeapons.Activated += (sender, args) => WeaponFunctions.RemoveAllWeapons();
+            SelectWeapon.Activated += (sender, args) =>
+            {
+                int index = SelectWeapon.SelectedIndex;
+
+                if (index >= 0 && index < weaponArray.Length)
+                {
+                    WeaponHash selectedWeapon = weaponArray[index];
+                    WeaponFunctions.SelectWeapon(selectedWeapon);
+                }
+                else
+                {
+                    GTA.UI.Notification.Show("~r~Invalid weapon selection.");
+                }
+            };
+            InfiniteAmmo.CheckboxChanged += (sender, args) => WeaponFunctions.InfiniteAmmo(InfiniteAmmo.Checked);
+            SetAmmo.Activated += (sender, args) => WeaponFunctions.SetAmmoInput();
             #endregion
         }
         public void Tick()
