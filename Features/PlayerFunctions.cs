@@ -98,7 +98,7 @@ namespace Open_Trainer_V.Features
         {
             isSuperJumpOn = isEnabled;
             ShowStatus("Super Jump: ", isEnabled);
-        }
+        } 
         public static void FastRun(bool isEnabled)
         {
             isFastRunOn = isEnabled;

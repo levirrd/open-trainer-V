@@ -49,6 +49,7 @@
         <Compile Include="Features\PlayerFunctions.cs" />
         <Compile Include="Features\VehicleFunctions.cs" />
         <Compile Include="Features\WeaponFunctions.cs" />
+        <Compile Include="Features\WorldFunctions.cs" />
         <Compile Include="MenuScript\MenuScript.cs" />
         <Compile Include="ModCore.cs" />
         <Compile Include="Properties\AssemblyInfo.cs"/>

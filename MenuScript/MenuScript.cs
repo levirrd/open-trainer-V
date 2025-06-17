@@ -18,6 +18,7 @@ namespace Open_Trainer_V
          private readonly NativeMenu WeaponOptions;
          private readonly NativeMenu WorldOptions;
          private readonly NativeMenu WantedOptions;
+         private readonly NativeMenu SetTime;
          public static MenuScript instance;
 
         private readonly NativeItem ClearWanted;
@@ -41,6 +42,7 @@ namespace Open_Trainer_V
         private readonly NativeCheckboxItem InfiniteAmmo;
         private readonly NativeItem SetAmmo;
         private bool lastInfiniteAmmoState = false;
+        private readonly NativeCheckboxItem FreezeTime;
         public MenuScript()
         {
             
@@ -51,6 +53,7 @@ namespace Open_Trainer_V
             VehicleOptions = new NativeMenu("Vehicle Options", "Vehicle Options", "Options related to Vehicles");
             WorldOptions = new NativeMenu("World Options", "World Options", "Options related to the World");
             WantedOptions = new NativeMenu("Wanted Options", "Wanted Options", "Options related to the Wanted System");
+            SetTime =  new NativeMenu("Set Time", "Set Time", "Set Time");
             menuPool = new ObjectPool();
             instance = this;
             menuPool.Add(TrainerMenu);
@@ -59,12 +62,14 @@ namespace Open_Trainer_V
             menuPool.Add(WeaponOptions);
             menuPool.Add(WorldOptions);
             menuPool.Add(WantedOptions);
+            menuPool.Add(SetTime);
             //submenus
             TrainerMenu.AddSubMenu(PlayerOptions);
             TrainerMenu.AddSubMenu(VehicleOptions);
             TrainerMenu.AddSubMenu(WeaponOptions);
             TrainerMenu.AddSubMenu(WorldOptions);
             PlayerOptions.AddSubMenu(WantedOptions);
+            WorldOptions.AddSubMenu(SetTime);
             //fonts
             TrainerMenu.BannerText.Font = Font.ChaletComprimeCologne;
             PlayerOptions.BannerText.Font = Font.ChaletComprimeCologne;
@@ -72,6 +77,7 @@ namespace Open_Trainer_V
             VehicleOptions.BannerText.Font = Font.ChaletComprimeCologne;
             WorldOptions.BannerText.Font = Font.ChaletComprimeCologne;
             WantedOptions.BannerText.Font = Font.ChaletComprimeCologne;
+            SetTime.BannerText.Font = Font.ChaletComprimeCologne;
             
             TrainerMenu.MouseBehavior = MenuMouseBehavior.Movement;
             #endregion
@@ -100,7 +106,9 @@ namespace Open_Trainer_V
             WeaponHash[] weaponArray = Enum.GetValues(typeof(WeaponHash)).Cast<WeaponHash>().ToArray();
             SelectWeapon = new NativeListItem<WeaponHash>("Select Weapon", "Selects a specific weapon for the Player", weaponArray);
             InfiniteAmmo = new NativeCheckboxItem("Infinite Ammo", "Sets Infinite Ammo to Player's Weapon",false);
-            SetAmmo = new NativeItem("Give Ammo", "Gives Player the input amount of Ammo.");
+            SetAmmo = new NativeItem("Give Ammo", "Gives Player the input amount of Ammo");
+            //world options
+            FreezeTime =  new NativeCheckboxItem("Freeze Time", "Freezes in game Time",false);
             #endregion
             
             #region Add Items to Menus
@@ -121,12 +129,14 @@ namespace Open_Trainer_V
             VehicleOptions.Add(SpawnVehicle);
             VehicleOptions.Add(FixVehicle);
             VehicleOptions.Add(CleanVehicle);
-            //wweapon
+            //weapon
             WeaponOptions.Add(GiveAllWeapons);
             WeaponOptions.Add(RemoveAllWeapons);
             WeaponOptions.Add(SelectWeapon);
             WeaponOptions.Add(InfiniteAmmo);
             WeaponOptions.Add(SetAmmo);
+            //world
+            WorldOptions.Add(FreezeTime);
             #endregion
             #region Event Handlers
             //player options
@@ -161,11 +171,16 @@ namespace Open_Trainer_V
             };
             InfiniteAmmo.CheckboxChanged += (sender, args) => WeaponFunctions.InfiniteAmmo(InfiniteAmmo.Checked);
             SetAmmo.Activated += (sender, args) => WeaponFunctions.SetAmmoInput();
+            FreezeTime.CheckboxChanged += (sender, args) => WorldFunctions.FreezeTime(FreezeTime.Checked);
             #endregion
         }
         public void Tick()
         {
             menuPool.Process();
+
+            if (PlayerFunctions.isInfiniteStaminaOn && InfiniteStamina.Checked) Function.Call(Hash.RESET_PLAYER_STAMINA, Game.Player);
+            if (PlayerFunctions.isSuperJumpOn && SuperJump.Checked) Function.Call(Hash.SET_SUPER_JUMP_THIS_FRAME, Game.Player.Handle);
+            if (PlayerFunctions.isFastRunOn && FastRunning.Checked) Function.Call(Hash.SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER, Game.Player, 1.7f);
             if (WeaponFunctions.isInfiniteAmmoEnabled && InfiniteAmmo.Checked) WeaponFunctions.InfiniteAmmo(InfiniteAmmo.Checked);
             if (InfiniteAmmo.Checked != lastInfiniteAmmoState)
             {
@@ -173,11 +188,6 @@ namespace Open_Trainer_V
                 PlayerFunctions.ShowStatus("Infinite Ammo: ", InfiniteAmmo.Checked);
                 lastInfiniteAmmoState = InfiniteAmmo.Checked;
             }
-            if (PlayerFunctions.isInfiniteStaminaOn && InfiniteStamina.Checked) Function.Call(Hash.RESET_PLAYER_STAMINA, Game.Player);
-            
-            if (PlayerFunctions.isSuperJumpOn && SuperJump.Checked) Function.Call(Hash.SET_SUPER_JUMP_THIS_FRAME, Game.Player.Handle);
-
-            if (PlayerFunctions.isFastRunOn && FastRunning.Checked) Function.Call(Hash.SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER, Game.Player, 1.7f);
         }
 
         public void OpenMenu()
