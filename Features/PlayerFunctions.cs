@@ -103,6 +103,7 @@ namespace Open_Trainer_V.Features
         public static void FastRun(bool isEnabled)
         {
             isFastRunOn = isEnabled;
+            Function.Call(Hash.SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER, 0, isEnabled ? 1.49f : 1.0f);
             ShowStatus("Fast Run: ", isEnabled);
         }
         

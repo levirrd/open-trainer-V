@@ -47,6 +47,7 @@ namespace Open_Trainer_V.Features
             if (PlayerChar.IsInVehicle())
             {
                 Vehicle currVehicle = PlayerChar.CurrentVehicle;
+                currVehicle.IsInvincible = isEnabled;
                 currVehicle.CanBeVisiblyDamaged = !isEnabled;
                 currVehicle.CanTiresBurst = !isEnabled;
                 currVehicle.CanEngineDegrade = !isEnabled;
@@ -82,7 +83,12 @@ namespace Open_Trainer_V.Features
         public static void DeleteCurrentVehicle()
         {
             Vehicle currVehicle = PlayerChar.CurrentVehicle;
-            currVehicle.Delete();
+            if (currVehicle != null)
+            {
+                currVehicle.Delete();
+                GTA.UI.Notification.Show("~b~Vehicle has been deleted.");
+            }
+            else GTA.UI.Notification.Show($"{notInVehicle}");
         }
     }
 }

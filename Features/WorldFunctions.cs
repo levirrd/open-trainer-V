@@ -11,7 +11,7 @@ namespace Open_Trainer_V.Features
             "Blizzard", "Christmas", "Clear", "Clearing", "Clouds", "ExtraSunny", "Foggy", "Halloween",
             "Neutral", "Overcast", "Raining", "Smog", "Snowing", "Snowlight", "ThunderStorm"
         };
-
+  
         public static List<NativeItem> CreateWeatherMenuItems()
         {
             var items = new List<NativeItem>();
@@ -24,11 +24,11 @@ namespace Open_Trainer_V.Features
                     if (Enum.TryParse(weatherName, out Weather weatherEnum))
                     {
                         World.Weather = weatherEnum;
-                        GTA.UI.Notification.Show($"Weather set to: {weatherName}");
+                        GTA.UI.Notification.Show($"Weather set to: ~g~{weatherName}");
                     }
                     else
                     {
-                        GTA.UI.Notification.Show($"~r~Invalid weather: {weatherName}");
+                        GTA.UI.Notification.Show($"~r~Invalid weather: ~r~{weatherName}");
                     }
                 };
                 items.Add(item);
@@ -66,7 +66,11 @@ namespace Open_Trainer_V.Features
 
         public static void SetLowGravity(bool isEnabled)
         {
-            if (isEnabled) GTA.World.GravityLevel = 4;
+            if (isEnabled)
+            {
+                GTA.World.GravityLevel = 4;
+                GTA.UI.Notification.Show("~b~Set Low Gravity Level");
+            }
             else GTA.World.GravityLevel = 0;
         }
     }

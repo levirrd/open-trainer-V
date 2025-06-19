@@ -18,7 +18,12 @@ namespace Open_Trainer_V.Features
             GTA.UI.Notification.Show("~b~All weapons given.");
         }
 
-        public static void RemoveAllWeapons() => PlayerChar.Weapons.RemoveAll();
+        public static void RemoveAllWeapons()
+        {
+            PlayerChar.Weapons.RemoveAll();
+            GTA.UI.Notification.Show("~b~All weapons Removed.");
+            
+        }
 
         public static void SelectWeapon(WeaponHash weapon)
         {

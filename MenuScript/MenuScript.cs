@@ -39,7 +39,7 @@ namespace Open_Trainer_V
         private readonly NativeItem FixVehicle;
         private readonly NativeItem GiveAllWeapons;
         private readonly NativeItem RemoveAllWeapons;
-        private readonly NativeListItem<WeaponHash> SelectWeapon;
+        private readonly NativeListItem<WeaponHash> WeaponSelect;
         private readonly NativeCheckboxItem InfiniteAmmo;
         private readonly NativeItem SetAmmo;
         private bool lastInfiniteAmmoState = false;
@@ -115,7 +115,7 @@ namespace Open_Trainer_V
             //weapon options
             InfiniteAmmo = new NativeCheckboxItem("Infinite Ammo", "Sets Infinite Ammo to Player's Weapon",false);
             WeaponHash[] weaponArray = Enum.GetValues(typeof(WeaponHash)).Cast<WeaponHash>().ToArray();
-            SelectWeapon = new NativeListItem<WeaponHash>("Select Weapon", "Selects a specific weapon for the Player", weaponArray);
+            WeaponSelect = new NativeListItem<WeaponHash>("Select Weapon", "Selects a specific weapon for the Player", weaponArray);
             GiveAllWeapons = new NativeItem("Give All Weapons", "Gives all valid Weapons to Player");
             RemoveAllWeapons = new NativeItem("Remove All Weapons", "Removes all valid Weapons from the Player");
             SetAmmo = new NativeItem("Give Ammo", "Gives Player the input amount of Ammo");
@@ -154,7 +154,7 @@ namespace Open_Trainer_V
             VehicleOptions.Add(DeleteVehicle);
             //weapon
             WeaponOptions.Add(InfiniteAmmo);
-            WeaponOptions.Add(SelectWeapon);
+            WeaponOptions.Add(WeaponSelect);
             WeaponOptions.Add(GiveAllWeapons);
             WeaponOptions.Add(RemoveAllWeapons);
             WeaponOptions.Add(SetAmmo);
@@ -187,9 +187,9 @@ namespace Open_Trainer_V
             DeleteVehicle.Activated += (sender, args) => VehicleFunctions.DeleteCurrentVehicle();  
             //weapon options
             InfiniteAmmo.CheckboxChanged += (sender, args) => WeaponFunctions.InfiniteAmmo(InfiniteAmmo.Checked);
-            SelectWeapon.Activated += (sender, args) =>
+            WeaponSelect.Activated += (sender, args) =>
             {
-                int index = SelectWeapon.SelectedIndex;
+                int index = WeaponSelect.SelectedIndex;
                 if (index >= 0 && index < weaponArray.Length)
                 {
                     WeaponHash selectedWeapon = weaponArray[index];
@@ -215,9 +215,12 @@ namespace Open_Trainer_V
         {
             menuPool.Process();
 
-            if (PlayerFunctions.isInfiniteStaminaOn && InfiniteStamina.Checked) Function.Call(Hash.RESET_PLAYER_STAMINA, Game.Player);
+            if (PlayerFunctions.isInfiniteStaminaOn && InfiniteStamina.Checked)
+            {
+                Function.Call(Hash.RESET_PLAYER_STAMINA, Game.Player);
+                Function.Call(Hash.RESTORE_PLAYER_STAMINA);
+            }
             if (PlayerFunctions.isSuperJumpOn && SuperJump.Checked) Function.Call(Hash.SET_SUPER_JUMP_THIS_FRAME, Game.Player.Handle);
-            if (PlayerFunctions.isFastRunOn && FastRunning.Checked) Function.Call(Hash.SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER, Game.Player, 1.7f);
             if (WeaponFunctions.isInfiniteAmmoEnabled && InfiniteAmmo.Checked) WeaponFunctions.InfiniteAmmo(InfiniteAmmo.Checked);
             if (InfiniteAmmo.Checked != lastInfiniteAmmoState)
             {
