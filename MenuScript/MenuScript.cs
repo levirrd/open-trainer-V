@@ -18,6 +18,7 @@ namespace Open_Trainer_V
          private readonly NativeMenu WeaponOptions;
          private readonly NativeMenu WorldOptions;
          private readonly NativeMenu WantedOptions;
+         private readonly NativeMenu WeatherOptions;
          private readonly NativeMenu SetTime;
          public static MenuScript instance;
 
@@ -43,6 +44,10 @@ namespace Open_Trainer_V
         private readonly NativeItem SetAmmo;
         private bool lastInfiniteAmmoState = false;
         private readonly NativeCheckboxItem FreezeTime;
+        private readonly NativeSliderItem SetHour;
+        private readonly NativeSliderItem SetMinute;
+        private readonly NativeSliderItem SetSecond;
+        private readonly NativeCheckboxItem LowGravity;
         public MenuScript()
         {
             
@@ -54,6 +59,7 @@ namespace Open_Trainer_V
             WorldOptions = new NativeMenu("World Options", "World Options", "Options related to the World");
             WantedOptions = new NativeMenu("Wanted Options", "Wanted Options", "Options related to the Wanted System");
             SetTime =  new NativeMenu("Set Time", "Set Time", "Set Time");
+            WeatherOptions =  new NativeMenu("Weather Options", "Weather Options", "Options related to the Weather");
             menuPool = new ObjectPool();
             instance = this;
             menuPool.Add(TrainerMenu);
@@ -63,12 +69,14 @@ namespace Open_Trainer_V
             menuPool.Add(WorldOptions);
             menuPool.Add(WantedOptions);
             menuPool.Add(SetTime);
+            menuPool.Add(WeatherOptions);
             //submenus
             TrainerMenu.AddSubMenu(PlayerOptions);
             TrainerMenu.AddSubMenu(VehicleOptions);
             TrainerMenu.AddSubMenu(WeaponOptions);
             TrainerMenu.AddSubMenu(WorldOptions);
             PlayerOptions.AddSubMenu(WantedOptions);
+            WorldOptions.AddSubMenu(WeatherOptions);
             WorldOptions.AddSubMenu(SetTime);
             //fonts
             TrainerMenu.BannerText.Font = Font.ChaletComprimeCologne;
@@ -77,6 +85,7 @@ namespace Open_Trainer_V
             VehicleOptions.BannerText.Font = Font.ChaletComprimeCologne;
             WorldOptions.BannerText.Font = Font.ChaletComprimeCologne;
             WantedOptions.BannerText.Font = Font.ChaletComprimeCologne;
+            WeatherOptions.BannerText.Font = Font.ChaletComprimeCologne;
             SetTime.BannerText.Font = Font.ChaletComprimeCologne;
             
             TrainerMenu.MouseBehavior = MenuMouseBehavior.Movement;
@@ -108,7 +117,16 @@ namespace Open_Trainer_V
             InfiniteAmmo = new NativeCheckboxItem("Infinite Ammo", "Sets Infinite Ammo to Player's Weapon",false);
             SetAmmo = new NativeItem("Give Ammo", "Gives Player the input amount of Ammo");
             //world options
+            SetHour = new NativeSliderItem("Set Hour", "Sets Hour",24,1);
+            SetMinute = new NativeSliderItem("Set Minute", "Sets Minutes",60,1);
+            SetSecond = new NativeSliderItem("Set Second", "Sets Seconds",60,1);
+            var weatherItems = WorldFunctions.CreateWeatherMenuItems();
+            foreach (var item in weatherItems)
+            {
+                WeatherOptions.Add(item);
+            }
             FreezeTime =  new NativeCheckboxItem("Freeze Time", "Freezes in game Time",false);
+            LowGravity = new NativeCheckboxItem("Low Gravity", "Sets Low Gravity to Player",false);
             #endregion
             
             #region Add Items to Menus
@@ -136,7 +154,11 @@ namespace Open_Trainer_V
             WeaponOptions.Add(InfiniteAmmo);
             WeaponOptions.Add(SetAmmo);
             //world
+            SetTime.Add(SetHour);
+            SetTime.Add(SetMinute);
+            SetTime.Add(SetSecond);
             WorldOptions.Add(FreezeTime);
+            WorldOptions.Add(LowGravity);
             #endregion
             #region Event Handlers
             //player options
@@ -171,7 +193,12 @@ namespace Open_Trainer_V
             };
             InfiniteAmmo.CheckboxChanged += (sender, args) => WeaponFunctions.InfiniteAmmo(InfiniteAmmo.Checked);
             SetAmmo.Activated += (sender, args) => WeaponFunctions.SetAmmoInput();
+            SetHour.ValueChanged += (sender, args) => WorldFunctions.SetHour(SetHour.Value);
+            SetMinute.ValueChanged += (sender, args) => WorldFunctions.SetMinutes(SetMinute.Value);
+            SetSecond.ValueChanged += (sender, args) => WorldFunctions.SetSeconds(SetSecond.Value);
             FreezeTime.CheckboxChanged += (sender, args) => WorldFunctions.FreezeTime(FreezeTime.Checked);
+            LowGravity.CheckboxChanged += (sender, args) => WorldFunctions.SetLowGravity(LowGravity.Checked);
+
             #endregion
         }
         public void Tick()
