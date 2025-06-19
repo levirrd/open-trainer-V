@@ -9,3 +9,4 @@ This trainer provides essential functionality for single-player use with a clean
    - [LemonUI (SHVDN3)](https://github.com/LemonUIbyLemon/LemonUI/releases)
   
 **This project is open source under the MIT License.**
+Just credit me lol if you want to use it.
