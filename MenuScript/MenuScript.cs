@@ -113,11 +113,11 @@ namespace Open_Trainer_V
             CleanVehicle =  new  NativeItem("Clean Vehicle", "Cleans the vehicle");
             DeleteVehicle = new NativeItem("Delete Vehicle", "Deletes the vehicle Player is sitting in.");
             //weapon options
-            GiveAllWeapons = new NativeItem("Give All Weapons", "Gives all valid Weapons to Player");
-            RemoveAllWeapons = new NativeItem("Remove All Weapons", "Removes all valid Weapons from the Player");
+            InfiniteAmmo = new NativeCheckboxItem("Infinite Ammo", "Sets Infinite Ammo to Player's Weapon",false);
             WeaponHash[] weaponArray = Enum.GetValues(typeof(WeaponHash)).Cast<WeaponHash>().ToArray();
             SelectWeapon = new NativeListItem<WeaponHash>("Select Weapon", "Selects a specific weapon for the Player", weaponArray);
-            InfiniteAmmo = new NativeCheckboxItem("Infinite Ammo", "Sets Infinite Ammo to Player's Weapon",false);
+            GiveAllWeapons = new NativeItem("Give All Weapons", "Gives all valid Weapons to Player");
+            RemoveAllWeapons = new NativeItem("Remove All Weapons", "Removes all valid Weapons from the Player");
             SetAmmo = new NativeItem("Give Ammo", "Gives Player the input amount of Ammo");
             RemoveCurrentWeapon = new NativeItem("Remove Current Weapon", "Removes the held Weapon from the Player");
             //world options
@@ -153,10 +153,10 @@ namespace Open_Trainer_V
             VehicleOptions.Add(CleanVehicle);
             VehicleOptions.Add(DeleteVehicle);
             //weapon
+            WeaponOptions.Add(InfiniteAmmo);
+            WeaponOptions.Add(SelectWeapon);
             WeaponOptions.Add(GiveAllWeapons);
             WeaponOptions.Add(RemoveAllWeapons);
-            WeaponOptions.Add(SelectWeapon);
-            WeaponOptions.Add(InfiniteAmmo);
             WeaponOptions.Add(SetAmmo);
             WeaponOptions.Add(RemoveCurrentWeapon);
             //world
@@ -186,8 +186,7 @@ namespace Open_Trainer_V
             CleanVehicle.Activated += (sender, args) => VehicleFunctions.CleanVehicle();
             DeleteVehicle.Activated += (sender, args) => VehicleFunctions.DeleteCurrentVehicle();  
             //weapon options
-            GiveAllWeapons.Activated += (sender, args) =>  WeaponFunctions.GiveAllWeapons();
-            RemoveAllWeapons.Activated += (sender, args) => WeaponFunctions.RemoveAllWeapons();
+            InfiniteAmmo.CheckboxChanged += (sender, args) => WeaponFunctions.InfiniteAmmo(InfiniteAmmo.Checked);
             SelectWeapon.Activated += (sender, args) =>
             {
                 int index = SelectWeapon.SelectedIndex;
@@ -198,7 +197,9 @@ namespace Open_Trainer_V
                 }
                 else  GTA.UI.Notification.Show("~r~Invalid weapon selection.");
             };
-            InfiniteAmmo.CheckboxChanged += (sender, args) => WeaponFunctions.InfiniteAmmo(InfiniteAmmo.Checked);
+            GiveAllWeapons.Activated += (sender, args) =>  WeaponFunctions.GiveAllWeapons();
+            RemoveAllWeapons.Activated += (sender, args) => WeaponFunctions.RemoveAllWeapons();
+
             SetAmmo.Activated += (sender, args) => WeaponFunctions.SetAmmoInput();
             RemoveCurrentWeapon.Activated += (sender, args) => WeaponFunctions.RemoveCurrentWeapon();
             //world options
