@@ -16,10 +16,11 @@ namespace Open_Trainer_V.Features
         }
         public static void ClearWantedLevel()
         {
-            Game.Player.WantedLevel = 0;
+            var player = Game.Player;
+            player.WantedLevel = 0;
             GTA.UI.Notification.Show("Wanted level has been cleared.");
-            
         }
+
         public static void ToggleGodMode(bool isEnabled)
         {
             PlayerChar.IsInvincible = isEnabled;

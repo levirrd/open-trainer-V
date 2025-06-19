@@ -6,7 +6,7 @@ namespace Open_Trainer_V.Features
     public class VehicleFunctions
     {
         private static Ped PlayerChar => Game.Player.Character;
-        private static string notInVehicle = "~b~Player is not in a ~r~Vehicle";
+        private static readonly string notInVehicle = "~b~Player is not in a ~r~Vehicle";
 
         public static void SpawnVehicle()
         {
@@ -19,27 +19,38 @@ namespace Open_Trainer_V.Features
                 return;
             }
             vehicleModel.Request(500);
-            while (!vehicleModel.IsLoaded) Script.Wait(100);
+            int timeout = 30;
+            while (!vehicleModel.IsLoaded && timeout > 0)
+            {
+                Script.Wait(100);
+                timeout--;
+            }
+            if (!vehicleModel.IsLoaded)
+            {
+                GTA.UI.Notification.Show("~r~Failed to load vehicle model.");
+                return;
+            }
             Vector3 spawnPos = PlayerChar.Position + PlayerChar.ForwardVector * 5f;
             Vehicle vehicle = World.CreateVehicle(vehicleModel, spawnPos);
-            if (vehicle != null)
-            {
-                vehicle.PlaceOnGround();
-                vehicle.MarkAsNoLongerNeeded();
-                GTA.UI.Notification.Show($"~b~Spawned: ~g~{input}");
-                PlayerChar.SetIntoVehicle(vehicle, VehicleSeat.Driver);
+            if (vehicle == null)
+            { 
+                GTA.UI.Notification.Show("~r~Failed to create vehicle.");
+                return;
             }
+            vehicle.PlaceOnGround();
+            vehicle.MarkAsNoLongerNeeded();
+            GTA.UI.Notification.Show($"~b~Spawned: ~g~{input}");
+            PlayerChar.SetIntoVehicle(vehicle, VehicleSeat.Driver);
         }
         public static void VehicleGodMode(bool isEnabled)
         {
             if (PlayerChar.IsInVehicle())
             {
                 Vehicle currVehicle = PlayerChar.CurrentVehicle;
-                currVehicle.CanBeVisiblyDamaged = isEnabled;
-                currVehicle.CanTiresBurst = isEnabled;
-                currVehicle.CanEngineDegrade = isEnabled;
-                currVehicle.CanWheelsBreak = isEnabled;
-                currVehicle.IsWaterCannonProof = isEnabled;
+                currVehicle.CanBeVisiblyDamaged = !isEnabled;
+                currVehicle.CanTiresBurst = !isEnabled;
+                currVehicle.CanEngineDegrade = !isEnabled;
+                currVehicle.CanWheelsBreak = !isEnabled;
                 string statusText = isEnabled ? "~g~Enabled" : "~r~Disabled";
                 GTA.UI.Notification.Show($"~b~Vehicle God Mode: {statusText}");
             }
@@ -66,6 +77,12 @@ namespace Open_Trainer_V.Features
                 
             }
             else GTA.UI.Notification.Show($"{notInVehicle}");
+        }
+
+        public static void DeleteCurrentVehicle()
+        {
+            Vehicle currVehicle = PlayerChar.CurrentVehicle;
+            currVehicle.Delete();
         }
     }
 }

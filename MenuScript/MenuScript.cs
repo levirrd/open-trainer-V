@@ -48,6 +48,8 @@ namespace Open_Trainer_V
         private readonly NativeSliderItem SetMinute;
         private readonly NativeSliderItem SetSecond;
         private readonly NativeCheckboxItem LowGravity;
+        private readonly NativeItem DeleteVehicle;
+        private readonly NativeItem RemoveCurrentWeapon;
         public MenuScript()
         {
             
@@ -109,6 +111,7 @@ namespace Open_Trainer_V
             VehicleGodMode = new NativeCheckboxItem("God Mode", "Sets vehicle God Mode",false);
             FixVehicle = new NativeItem("Fix Vehicle", "Repairs and cleans the vehicle");
             CleanVehicle =  new  NativeItem("Clean Vehicle", "Cleans the vehicle");
+            DeleteVehicle = new NativeItem("Delete Vehicle", "Deletes the vehicle Player is sitting in.");
             //weapon options
             GiveAllWeapons = new NativeItem("Give All Weapons", "Gives all valid Weapons to Player");
             RemoveAllWeapons = new NativeItem("Remove All Weapons", "Removes all valid Weapons from the Player");
@@ -116,6 +119,7 @@ namespace Open_Trainer_V
             SelectWeapon = new NativeListItem<WeaponHash>("Select Weapon", "Selects a specific weapon for the Player", weaponArray);
             InfiniteAmmo = new NativeCheckboxItem("Infinite Ammo", "Sets Infinite Ammo to Player's Weapon",false);
             SetAmmo = new NativeItem("Give Ammo", "Gives Player the input amount of Ammo");
+            RemoveCurrentWeapon = new NativeItem("Remove Current Weapon", "Removes the held Weapon from the Player");
             //world options
             SetHour = new NativeSliderItem("Set Hour", "Sets Hour",24,1);
             SetMinute = new NativeSliderItem("Set Minute", "Sets Minutes",60,1);
@@ -147,12 +151,14 @@ namespace Open_Trainer_V
             VehicleOptions.Add(SpawnVehicle);
             VehicleOptions.Add(FixVehicle);
             VehicleOptions.Add(CleanVehicle);
+            VehicleOptions.Add(DeleteVehicle);
             //weapon
             WeaponOptions.Add(GiveAllWeapons);
             WeaponOptions.Add(RemoveAllWeapons);
             WeaponOptions.Add(SelectWeapon);
             WeaponOptions.Add(InfiniteAmmo);
             WeaponOptions.Add(SetAmmo);
+            WeaponOptions.Add(RemoveCurrentWeapon);
             //world
             SetTime.Add(SetHour);
             SetTime.Add(SetMinute);
@@ -178,6 +184,7 @@ namespace Open_Trainer_V
             VehicleGodMode.CheckboxChanged += (sender, args) => VehicleFunctions.VehicleGodMode(VehicleGodMode.Checked);
             FixVehicle.Activated += (sender, args) => VehicleFunctions.FixVehicle();
             CleanVehicle.Activated += (sender, args) => VehicleFunctions.CleanVehicle();
+            DeleteVehicle.Activated += (sender, args) => VehicleFunctions.DeleteCurrentVehicle();  
             //weapon options
             GiveAllWeapons.Activated += (sender, args) =>  WeaponFunctions.GiveAllWeapons();
             RemoveAllWeapons.Activated += (sender, args) => WeaponFunctions.RemoveAllWeapons();
@@ -193,6 +200,8 @@ namespace Open_Trainer_V
             };
             InfiniteAmmo.CheckboxChanged += (sender, args) => WeaponFunctions.InfiniteAmmo(InfiniteAmmo.Checked);
             SetAmmo.Activated += (sender, args) => WeaponFunctions.SetAmmoInput();
+            RemoveCurrentWeapon.Activated += (sender, args) => WeaponFunctions.RemoveCurrentWeapon();
+            //world options
             SetHour.ValueChanged += (sender, args) => WorldFunctions.SetHour(SetHour.Value);
             SetMinute.ValueChanged += (sender, args) => WorldFunctions.SetMinutes(SetMinute.Value);
             SetSecond.ValueChanged += (sender, args) => WorldFunctions.SetSeconds(SetSecond.Value);
