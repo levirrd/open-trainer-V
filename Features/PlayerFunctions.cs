@@ -1,5 +1,6 @@
 ﻿using GTA;
 using GTA.Native;
+using GTA.Math;
 namespace Open_Trainer_V.Features
 {
     public static class PlayerFunctions
@@ -24,7 +25,6 @@ namespace Open_Trainer_V.Features
         public static void ToggleGodMode(bool isEnabled)
         {
             PlayerChar.IsInvincible = isEnabled;
-            PlayerChar.CanRagdoll = !isEnabled;
             PlayerChar.IsBulletProof = isEnabled;
             PlayerChar.IsCollisionProof = isEnabled;
             PlayerChar.IsExplosionProof  = isEnabled;
@@ -106,7 +106,41 @@ namespace Open_Trainer_V.Features
             Function.Call(Hash.SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER, 0, isEnabled ? 1.49f : 1.0f);
             ShowStatus("Fast Run: ", isEnabled);
         }
-        
-        
+        public static void TeleportToWayPoint()
+        {
+            if (!Game.IsWaypointActive)
+            {
+                GTA.UI.Notification.Show("~r~Error:~s~ No Waypoint set.");
+                return;
+            }
+            Vector3 waypoint = World.WaypointPosition;
+            Entity entity = PlayerChar;
+            if (PlayerChar.IsInVehicle()) entity = PlayerChar.CurrentVehicle;
+            float groundZ = 0f;
+            bool foundGround = false;
+            float[] testHeights = { 100f, 150f, 200f, 250f, 300f, 400f, 500f, 600f, 800f };
+            foreach (float height in testHeights)
+            {
+                Vector3 testPos = new Vector3(waypoint.X, waypoint.Y, height);
+                entity.Position = testPos;
+                Script.Wait(100); 
+                OutputArgument groundZArg = new OutputArgument();
+                bool success = Function.Call<bool>(
+                    Hash.GET_GROUND_Z_FOR_3D_COORD,
+                    waypoint.X,
+                    waypoint.Y,
+                    height,
+                    groundZArg
+                );
+                if(success)
+                {
+                    groundZ = groundZArg.GetResult<float>();
+                    foundGround = true;
+                    break;
+                }
+            }
+            float finalZ = foundGround ? groundZ + 1.0f : waypoint.Z + 1.0f;
+            entity.Position = new Vector3(waypoint.X, waypoint.Y, finalZ);
+        }
     }
 }

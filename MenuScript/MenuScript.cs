@@ -50,6 +50,8 @@ namespace Open_Trainer_V
         private readonly NativeCheckboxItem LowGravity;
         private readonly NativeItem DeleteVehicle;
         private readonly NativeItem RemoveCurrentWeapon;
+        private readonly NativeItem TeleportToWaypoint;
+        private readonly NativeCheckboxItem SetSeatBeltOn;
         public MenuScript()
         {
             
@@ -102,6 +104,7 @@ namespace Open_Trainer_V
             PlayerVisibility = new NativeCheckboxItem("Player Visibility", "Sets player visibility to Player",false);
             SetMoney = new NativeItem("Money Input", "Money Input");
             SetWantedLevel = new NativeSliderItem("Set Wanted Level", "Sets Player Wanted Level", 5,0);
+            TeleportToWaypoint = new NativeItem("Teleport To Waypoint", "Teleports the player to the waypoint");
             ClearWanted = new NativeItem("Clear Wanted", "Clears Wanted Level for the Player");
             NeverWanted = new  NativeCheckboxItem("Never Wanted", "Disables Wanted Level",false);
             SuperJump = new  NativeCheckboxItem("Super Jump", "Makes the Player Jump HIGH",false);
@@ -112,6 +115,7 @@ namespace Open_Trainer_V
             FixVehicle = new NativeItem("Fix Vehicle", "Repairs and cleans the vehicle");
             CleanVehicle =  new  NativeItem("Clean Vehicle", "Cleans the vehicle");
             DeleteVehicle = new NativeItem("Delete Vehicle", "Deletes the vehicle Player is sitting in.");
+            SetSeatBeltOn = new NativeCheckboxItem("SeatBelt", "Puts Seatbelt on, which makes the player not fall out", false);
             //weapon options
             InfiniteAmmo = new NativeCheckboxItem("Infinite Ammo", "Sets Infinite Ammo to Player's Weapon",false);
             WeaponHash[] weaponArray = Enum.GetValues(typeof(WeaponHash)).Cast<WeaponHash>().ToArray();
@@ -143,11 +147,13 @@ namespace Open_Trainer_V
             PlayerOptions.Add(PlayerVisibility);
             PlayerOptions.Add(SuperJump);
             PlayerOptions.Add(FastRunning);
+            PlayerOptions.Add(TeleportToWaypoint);
             PlayerOptions.Add(HealPlayer);
             PlayerOptions.Add(CleanPlayer);
             PlayerOptions.Add(SetMoney);
             //vehicle
             VehicleOptions.Add(VehicleGodMode);
+            VehicleOptions.Add(SetSeatBeltOn);
             VehicleOptions.Add(SpawnVehicle);
             VehicleOptions.Add(FixVehicle);
             VehicleOptions.Add(CleanVehicle);
@@ -179,12 +185,14 @@ namespace Open_Trainer_V
             NeverWanted.CheckboxChanged += (sender, args) => PlayerFunctions.NeverWanted(NeverWanted.Checked);
             SuperJump.CheckboxChanged += (sender, args) => PlayerFunctions.SuperJump(SuperJump.Checked);
             FastRunning.CheckboxChanged += (sender, args) => PlayerFunctions.FastRun(FastRunning.Checked);
+            TeleportToWaypoint.Activated += (sender, args) => PlayerFunctions.TeleportToWayPoint();
             //vehicle options
             SpawnVehicle.Activated += (sender, args) => VehicleFunctions.SpawnVehicle();
             VehicleGodMode.CheckboxChanged += (sender, args) => VehicleFunctions.VehicleGodMode(VehicleGodMode.Checked);
             FixVehicle.Activated += (sender, args) => VehicleFunctions.FixVehicle();
             CleanVehicle.Activated += (sender, args) => VehicleFunctions.CleanVehicle();
-            DeleteVehicle.Activated += (sender, args) => VehicleFunctions.DeleteCurrentVehicle();  
+            DeleteVehicle.Activated += (sender, args) => VehicleFunctions.DeleteCurrentVehicle();
+            SetSeatBeltOn.CheckboxChanged += (sender, args) => VehicleFunctions.SeatBeltOn(SetSeatBeltOn.Checked); 
             //weapon options
             InfiniteAmmo.CheckboxChanged += (sender, args) => WeaponFunctions.InfiniteAmmo(InfiniteAmmo.Checked);
             WeaponSelect.Activated += (sender, args) =>

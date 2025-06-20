@@ -1,5 +1,6 @@
 ﻿using GTA;
 using GTA.Math;
+using GTA.Native;
 
 namespace Open_Trainer_V.Features
 {
@@ -90,5 +91,27 @@ namespace Open_Trainer_V.Features
             }
             else GTA.UI.Notification.Show($"{notInVehicle}");
         }
+
+        public static void SeatBeltOn(bool isEnabled)
+        {
+            if (!PlayerChar.IsInVehicle())
+            {
+                GTA.UI.Notification.Show(notInVehicle);
+                return;
+            };
+
+            if (isEnabled)
+            {
+                Function.Call(Hash.SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE, PlayerChar, 1);
+                Function.Call(Hash.SET_PED_CAN_RAGDOLL, PlayerChar, false);
+            }
+            else
+            {
+                Function.Call(Hash.SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE, PlayerChar, 0);
+                Function.Call(Hash.SET_PED_CAN_RAGDOLL, PlayerChar, true);
+            }
+            PlayerFunctions.ShowStatus("Seatbelt: ", isEnabled);
+        }
+
     }
 }
